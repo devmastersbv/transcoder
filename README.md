@@ -120,6 +120,14 @@ try {
 }
 ```
 
+To override the MbTranscoder or IconvTranscoder class (to include your own hacks) 
+use the following before calling Transcoder::create() for the first time:
+
+```
+Transcoder::$iconvClass = "ddeboer\Transcoder\IconvTranscoder";
+Transcoder::$mbClass = "ddeboer\Transcoder\MbTranscoder";
+```
+
 ### Transcoder fallback
 
 In general, `mb_convert_encoding` is faster than `iconv`. However, as `iconv`

@@ -8,6 +8,9 @@ use Ddeboer\Transcoder\Exception\UnsupportedEncodingException;
 class Transcoder implements TranscoderInterface
 {
     private static $chain;
+
+    public static $iconvClass = "ddeboer\Transcoder\IconvTranscoder";
+    public static $mbClass = "ddeboer\Transcoder\MbTranscoder";
     
     /**
      * @var TranscoderInterface[]
@@ -53,13 +56,13 @@ class Transcoder implements TranscoderInterface
         $transcoders = [];
         
         try {
-            $transcoders[] = new MbTranscoder($defaultEncoding);
+            $transcoders[] = new self::$mbClass($defaultEncoding);
         } catch (ExtensionMissingException $mb) {
             // Ignore missing mbstring extension; fall back to iconv
         }
 
         try {
-            $transcoders[] = new IconvTranscoder($defaultEncoding);
+            $transcoders[] = new self::$iconvClass($defaultEncoding);
         } catch (ExtensionMissingException $iconv) {
             // Neither mbstring nor iconv
             throw $iconv;

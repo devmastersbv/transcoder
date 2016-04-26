@@ -20,7 +20,7 @@ class IconvTranscoder implements TranscoderInterface
         $this->defaultEncoding = $defaultEncoding;
     }
 
-    public function getFrom($from)
+    public function overrideFrom($from)
     {
         if ($from === "unicode-1-1-utf-7") {
             $from = 'utf7';
@@ -43,7 +43,7 @@ class IconvTranscoder implements TranscoderInterface
         }, E_NOTICE | E_USER_NOTICE
         );
 
-        $hackedFrom = $this->getFrom($from);
+        $hackedFrom = $this->overrideFrom($from);
         $result = iconv($hackedFrom, $to ? : $this->defaultEncoding, $string);
         restore_error_handler();
 
