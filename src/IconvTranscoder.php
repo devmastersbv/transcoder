@@ -10,6 +10,7 @@ class IconvTranscoder implements TranscoderInterface
 {
 
     private $defaultEncoding;
+    public static $ignore;
 
     public function __construct($defaultEncoding = 'UTF-8')
     {
@@ -24,6 +25,9 @@ class IconvTranscoder implements TranscoderInterface
     {
         if ($from === "unicode-1-1-utf-7") {
             $from = 'utf7';
+        } else if ($from === "auto") {
+            //Ignore this, causes errors
+            $from = "utf8";
         }
         return $from;
     }
@@ -35,10 +39,12 @@ class IconvTranscoder implements TranscoderInterface
     {
         set_error_handler(
                 function ($no, $message) use ($string) {
-            if (1 === preg_match('/Wrong charset, conversion (.+) is/', $message, $matches)) {
-                throw new UnsupportedEncodingException($matches[1], $message);
-            } else {
-                throw new IllegalCharacterException($string, $message);
+            if (!self::$ignore) {
+                if (1 === preg_match('/Wrong charset, conversion (.+) is/', $message, $matches)) {
+                    throw new UnsupportedEncodingException($matches[1], $message);
+                } else {
+                    throw new IllegalCharacterException($string, $message);
+                }
             }
         }, E_NOTICE | E_USER_NOTICE
         );
