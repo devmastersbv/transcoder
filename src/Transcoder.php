@@ -11,7 +11,7 @@ class Transcoder implements TranscoderInterface
     private static $chain;
     public static $iconvClass = "ddeboer\Transcoder\IconvTranscoder";
     public static $mbClass = "ddeboer\Transcoder\MbTranscoder";
-    public static $defaultCharset = "UTF-8";
+    public static $defaultEncoding = "UTF-8";
 
     /**
      * @var TranscoderInterface[]
