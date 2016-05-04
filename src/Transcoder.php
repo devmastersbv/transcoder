@@ -58,13 +58,14 @@ class Transcoder implements TranscoderInterface
         }
 
         $transcoders = [];
-
-        try {
-            $transcoders[] = new self::$mbClass($defaultEncoding);
-        } catch (ExtensionMissingException $mb) {
-            // Ignore missing mbstring extension; fall back to iconv
+        if (self::$mbClass) {
+            try {
+                $transcoders[] = new self::$mbClass($defaultEncoding);
+            } catch (ExtensionMissingException $mb) {
+                // Ignore missing mbstring extension; fall back to iconv
+            }
         }
-
+        
         try {
             $transcoders[] = new self::$iconvClass($defaultEncoding);
         } catch (ExtensionMissingException $iconv) {
