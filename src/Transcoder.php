@@ -9,8 +9,8 @@ class Transcoder implements TranscoderInterface
 {
 
     private static $chain;
-    public static $iconvClass = "ddeboer\Transcoder\IconvTranscoder";
-    public static $mbClass = "ddeboer\Transcoder\MbTranscoder";
+    public static $iconvClass = "Ddeboer\Transcoder\IconvTranscoder";
+    public static $mbClass = "Ddeboer\Transcoder\MbTranscoder";
     public static $defaultEncoding = "UTF-8";
 
     /**
