@@ -7,16 +7,17 @@ use Ddeboer\Transcoder\Exception\UnsupportedEncodingException;
 
 class Transcoder implements TranscoderInterface
 {
-    private static $chain;
 
+    private static $chain;
     public static $iconvClass = "ddeboer\Transcoder\IconvTranscoder";
     public static $mbClass = "ddeboer\Transcoder\MbTranscoder";
-    
+    public static $defaultCharset = "UTF-8";
+
     /**
      * @var TranscoderInterface[]
      */
     private $transcoders = [];
-    
+
     public function __construct(array $transcoders)
     {
         $this->transcoders = $transcoders;
@@ -34,7 +35,7 @@ class Transcoder implements TranscoderInterface
                 // Ignore as long as the fallback transcoder is all right
             }
         }
-        
+
         throw $e;
     }
 
@@ -47,14 +48,17 @@ class Transcoder implements TranscoderInterface
      *
      * @throws ExtensionMissingException
      */
-    public static function create($defaultEncoding = 'UTF-8')
+    public static function create($defaultEncoding = null)
     {
+        if (!$defaultEncoding) {
+            $defaultEncoding = self::$defaultEncoding;
+        }
         if (isset(self::$chain[$defaultEncoding])) {
             return self::$chain[$defaultEncoding];
         }
-        
+
         $transcoders = [];
-        
+
         try {
             $transcoders[] = new self::$mbClass($defaultEncoding);
         } catch (ExtensionMissingException $mb) {
@@ -67,9 +71,10 @@ class Transcoder implements TranscoderInterface
             // Neither mbstring nor iconv
             throw $iconv;
         }
-        
+
         self::$chain[$defaultEncoding] = new self($transcoders);
 
         return self::$chain[$defaultEncoding];
     }
+
 }
